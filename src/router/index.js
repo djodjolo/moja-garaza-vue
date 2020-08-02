@@ -5,6 +5,8 @@ import EditVehicle from '@/components/EditVehicle'
 import NewVehicle  from '@/components/NewVehicle'
 import ViewCar from '@/components/ViewCar'
 import Login from '@/views/auth/Login'
+import Register from '@/views/auth/Register'
+import firebase from 'firebase'
 
 Vue.use(VueRouter)
 
@@ -12,7 +14,10 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'dashboard',
-    component: Dashboard
+    component: Dashboard,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/login',
@@ -20,19 +25,35 @@ Vue.use(VueRouter)
     component: Login
   },
   {
+    path: '/register',
+    name: 'register',
+    component: Register,
+    meta: {
+      requiresGuest: true
+    }
+  },
+  {
     path: '/new-vehicle',
     name: 'new-vehicle',
-    component: NewVehicle
+    component: NewVehicle,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/edit-vehicle/:vehicle_id',
     name: 'edit-vehicle',
-    component: EditVehicle
+    component: EditVehicle,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/:vehicle_id',
     name: 'view-car',
-    component: ViewCar
+    component: ViewCar,meta: {
+      requiresAuth: true
+    }
   }
   
 ]
@@ -42,5 +63,35 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+//nav Guards
+
+router.beforeEach((to,from,next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)){
+    if(!firebase.auth().currentUser){
+      next({
+        path : '/login',
+        query : {
+          redirect : to.fullPath
+        }
+      });
+    }else{
+      next();
+    }
+    }else if(to.matched.some(record => record.meta.requiresGuest)){
+      if(firebase.auth().currentUser){
+        next({
+          path : '/',
+          query : {
+            redirect : to.fullPath
+          }
+        });
+      }else{
+        next();
+      }
+    }else{
+      next();
+    }
+});
 
 export default router
