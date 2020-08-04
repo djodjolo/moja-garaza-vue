@@ -5,6 +5,9 @@ import EditVehicle from '@/components/EditVehicle'
 import NewVehicle  from '@/components/NewVehicle'
 import ViewCar from '@/components/ViewCar'
 import Login from '@/views/auth/Login'
+import ForgotPassword from '@/views/auth/ForgotPassword'
+import ResetPassword from '@/views/auth/ResetPassword'
+import Welcome from '@/views/Welcome'
 import Register from '@/views/auth/Register'
 import firebase from 'firebase'
 
@@ -13,6 +16,14 @@ Vue.use(VueRouter)
   const routes = [
   {
     path: '/',
+    name: 'welcome',
+    component: Welcome,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/dashboard',
     name: 'dashboard',
     component: Dashboard,
     meta: {
@@ -33,7 +44,23 @@ Vue.use(VueRouter)
     }
   },
   {
-    path: '/new-vehicle',
+    path: '/forgot-password',
+    name: 'forgot-password',
+    component: ForgotPassword,
+    meta: {
+      requiresGuest: true
+    }
+  },
+  {
+    path: '/reset-password',
+    name: 'reset-password',
+    component: ResetPassword,
+    meta: {
+      requiresGuest: true
+    }
+  },
+  {
+    path: '/dashboard/new-vehicle',
     name: 'new-vehicle',
     component: NewVehicle,
     meta: {
@@ -41,7 +68,7 @@ Vue.use(VueRouter)
     }
   },
   {
-    path: '/edit-vehicle/:vehicle_id',
+    path: '/dashboard/edit-vehicle/:vehicle_id',
     name: 'edit-vehicle',
     component: EditVehicle,
     meta: {
@@ -49,7 +76,7 @@ Vue.use(VueRouter)
     }
   },
   {
-    path: '/:vehicle_id',
+    path: '/dashboard/:vehicle_id',
     name: 'view-car',
     component: ViewCar,meta: {
       requiresAuth: true
