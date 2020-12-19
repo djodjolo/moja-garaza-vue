@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Dashboard from '@/components/Dashboard'
+import PageNotFound from '@/views/PageNotFound'
 import EditVehicle from '@/components/EditVehicle'
 import NewVehicle  from '@/components/NewVehicle'
 import ViewCar from '@/components/ViewCar'
@@ -80,10 +81,14 @@ const routes = [
     component: ViewCar,meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '*',
+    name: 'page-not-found',
+    component: PageNotFound
   }
   
 ]
-
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -96,7 +101,7 @@ router.beforeEach((to,from,next) => {
   if(to.matched.some(record => record.meta.requiresAuth)){
     if(!firebase.auth().currentUser){
       next({
-        path : '/login',
+        path : '/',
         query : {
           redirect : to.fullPath
         }
@@ -105,6 +110,7 @@ router.beforeEach((to,from,next) => {
       next();
     }
     }else if(to.matched.some(record => record.meta.requiresGuest)){
+      this.$router.push('/')
       if(firebase.auth().currentUser){
         next({
           path : '/',

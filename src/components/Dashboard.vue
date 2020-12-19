@@ -1,15 +1,23 @@
 <template>
-    <div id="dashboard">
+<div class="list-group">
+
+
+   <div class="list-group-item list-group-item-action" v-for="car in cars" v-bind:key="car.id">
+         <router-link class="secondary-content" v-bind:to="{name: 'view-car', params: {vehicle_id: car.vehicle_id}}">
+       {{car.name}}<i class="fa fa-eye"></i>   
+         </router-link>
+       
+  </div>
+
+
+</div>
+
+    <!-- <div id="dashboard">
         <ul class="collection with-header">
-            <li class="collection-header">
-               Auto
-           </li>
            <li v-for="car in cars" v-bind:key="car.id" class="collection-item">
                <div class="chip">
-                   Auto
+                    {{car.name}}
                </div>
-               {{car.name}}
-
                <router-link class="secondary-content" v-bind:to="{name: 'view-car', params: {vehicle_id: car.vehicle_id}}"> <i class="fa fa-eye"></i> </router-link>
            </li>
        </ul>
@@ -19,7 +27,7 @@
         </router-link>
     </div>
 
-    </div>
+    </div> -->
 </template>
 
 <script>
@@ -34,7 +42,6 @@ export default {
         }
     },
     created () {
-        alert(firebase.auth().currentUser.uid);
         db.collection('vehicles').where("uid","==",firebase.auth().currentUser.uid).get().then(querySnapshot => {
             querySnapshot.forEach(doc => {
                 // console.log(doc.data());
